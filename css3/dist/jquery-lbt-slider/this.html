@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<style type="text/css">
+			#input1{
+				
+			}
+		</style>
+	</head>
+	
+	<body>
+		<div>
+			<input type="text" id="input1">
+		</div>
+		<script src="./js/jquery-1.11.3.min.js"></script>
+		<!-- <script src="./js/cjtext.js"></script> -->
+		<script type="text/javascript">
+			// var o = {
+			//     user:"追梦子",
+			//     fn:function(){
+			//         console.log(this.user);  //追梦子
+			// 		this.abc = "hhh"
+			//     }
+			// }
+			// o.fn();
+			// console.log(o.abc)  //hhh
+			
+			function Fn(){
+			    // this.user = "追梦子";
+				var user = "追梦子";
+				console.log(this)
+			}
+			var a = new Fn();
+			console.log(a.user); //追梦子
+			
+			var a = {
+				 user : "追梦子"
+			}
+			console.log(a.user);
+			
+			
+			//报错
+			// function C1(){
+			//     var o = {
+			//         p:”I’m p in C1”
+			//     }
+			//     return o;
+			// }
+			// var o1 = new C1();
+			// alert(o1.p);//I’m p in C1
+			
+			//报错
+			// function person(name ){
+			//      Object obj =new Object();
+			//      obj.name =name;
+			//       return obj;
+			//    }
+			//     var p1= person("John");
+		</script>
+	</body>
+</html>

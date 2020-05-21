@@ -1,0 +1,319 @@
+<!-- 
+1，先做CSS静态布局，需要用到的重点属性有，position定位，transform的transform3d位移，scale缩放，opacity透明度
+				z-index Z轴图层
+2，利用vue重新渲染静态页面
+3，渲染class类
+	var Item = document.getElementsByClassName('item');
+	for(var i = 0; i < Item.length; i++){
+		Item[i].className = 'item ' + this.numList[i];
+	}
+4，设置定时更新class类
+
+ 
+ -->
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>vue-轮播图</title>
+		<!-- <script src="../public/vue.js"></script> -->
+		<script src="https://www.jq22.com/jquery/vue.min.js"></script>
+		<style type="text/css">
+			* {margin: 0;padding: 0;}
+			body{background-color: #212121}
+			.box{
+				position: relative;
+				width: 800px;
+				height: 300px;
+				margin: 100px auto;
+			}
+/* 			.clearfix:after {
+				content: " ";
+				display: block;
+				clear: both;
+			} */
+			.main{
+				width: 800px;
+				height: 300px;
+				position: absolute;
+				top: 0;
+				left: 0;
+				/* overflow: hidden; */
+			}
+			.minMain{
+				width: 100%;
+				height: 100%;
+				position: absolute;
+				top: 0;
+				left: 0;
+			}
+			.item {
+				/* list-style: none; */
+				width: 400px;
+				height: 230px;
+				position: absolute;
+				top: 27px;
+				left: 0px;
+				transition: all 2s ease;
+			}
+			.item img {
+				width: 100%;
+				height: 100%;
+				/* 相当于父级的的400px，230px */
+			}
+			.p0 {
+				transform: translate3d(-400px, 0, 0) scale(1);
+				opacity: 0.1;
+				z-index: 1;
+			}
+			.p1 {
+				transform: translate3d(0px, 0, 0) scale(1);
+				opacity: 0.8;
+				z-index: 2;
+			}
+			.p2 {
+				transform: translate3d(400px, 0, 0) scale(1);
+				opacity: 0.8;
+				z-index: 3;
+			}
+			.p3 {
+				transform: translate3d(200px, 0, 0) scale(1.5);
+				opacity: 1;
+				z-index: 4;
+			}
+			.p4 {
+				transform: translate3d(800px, 0, 0) scale(1);
+				opacity: 0.1;
+				z-index: 3;
+			}
+          .btnMain{
+				width: 100%;
+				height: 100%;
+				position: absolute;
+				top: 0px;
+				left: 0px;    
+				/* //这里可以不要，.btnMain继承父级的的 .main */ 
+			}
+			.left {
+				position: absolute;
+				left: 15px;
+				top: 50%;
+				margin-top: -15px;
+				z-index: 200;
+				/* 这里不设置虽然能看到，但点击不到 */
+				/* 大于等于2就行 */
+			}
+			.right {
+				position: absolute;
+				right: 15px;
+				top: 50%;
+				margin-top: -15px;
+				z-index: 10;
+			}
+			.left img, .right img{
+				width: 30px;
+				height: 30px;
+			}
+			.pressMain {
+				position: absolute;
+				left: 50%;
+				bottom: 10px;
+				margin-left: -57px;
+				width: 134px;
+				height: 24px;
+				z-index: 20;
+				text-align: center;
+				line-height: 24px;
+			}
+			.pressMain span{
+				display: inline-block;
+				width: 10px;
+				height: 10px;
+				border-radius: 50%;
+				background-color: rgba(255,255,255,0.53);
+				margin: 2px 3px;
+				/* z-index: 10; */
+			}
+			.pressMain .active{
+				background: brown;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="app">
+			<div class="box" >
+				<div class="main clearfix" @mouseover.stop="btnOpen" @mouseout.stop="btnHide" >
+					<!-- @mouseover.stop="btnOpen" @mouseout.stop="btnHide"_不能放这里(minMain) -->
+					<!-- 因为.btnMain中的.left.right图层高，鼠标放在上面优先是触发它们两个， -->
+					<!-- 哎，想不明白，就当mouseover是捕获事件，要放在父级，然后才有子级的点击事件 -->
+					<div class="minMain" @mouseover>
+						<div class="item" v-for="(item,index) in list" :key="index">
+							<img :src="item.imgUrl">
+						</div>
+					</div>
+					<div class="btnMain" v-show.stop="btnShow" @mouseover>
+						<!--@mouseover.stop 阻止事件冒泡后，会进行事件捕获，所以鼠标over时候，不断触发了下面的@click事件  -->
+						<div class="left" @click.stop="leftClick">
+							<img src="../img/ljiantou.png">
+						</div>
+						<div class="right" @click="rightClick">
+							<img src="../img/rjiantou.png">
+						</div>
+					</div>
+					<div class="pressMain">
+						<span v-for="(item,index) in pressList" :class="{active:item.isShow}" :key="index" @click.stop="change(index)"></span>
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+	<script type="text/javascript">
+		
+		var vm = new Vue({
+			el: '#app',
+			data: function(){
+				return{
+					list: [
+						{ imgUrl: '../img/t1.png' },
+						{ imgUrl: '../img/t2.png' },
+						{ imgUrl: '../img/t3.png' },
+						{ imgUrl: '../img/t4.png' },
+						{ imgUrl: '../img/t5.png' }
+					],
+					pressList: [
+						{ name: '1', isShow: false },
+						{ name: '2', isShow: false }, 
+						{ name: '3', isShow: false }, 
+						{ name: '4', isShow: false }, 
+						{ name: '5', isShow: false },
+					],
+					numList: ['p0', 'p1', 'p2', 'p3', 'p4'],
+					imgTimer: null,
+					imgIndex: 0,
+					btnShow: false
+				}
+			},
+			mounted:function(){
+				console.log('hello');
+				var Item = document.getElementsByClassName('item');
+				for(var i = 0; i < Item.length; i++){
+					Item[i].className = 'item ' + this.numList[i];
+				}
+				this.imgMove();
+				this.pressList[0].isShow = true;
+				
+			},
+			methods:{		
+				imgMove() {
+					console.log('你哈')
+					var Item = document.getElementsByClassName('item');
+					var imgIndex = 0;
+					this.imgTimer = setInterval(()=>{
+						this.numList.push(this.numList[0]);
+						this.numList.shift();
+						this.imgIndex++;
+						for(var i = 0; i < Item.length; i++){
+							Item[i].className = 'item ' + this.numList[i];
+						}
+						//先让isShow全部为false
+						for(var i in this.pressList){
+							this.pressList[i].isShow = false;
+						}
+						//然后让当前第imgIndex个的isShow为true。
+						if(this.imgIndex > (Item.length-1)){
+							this.imgIndex = 0;
+							this.pressList[this.imgIndex].isShow = true;
+						}else {
+							this.pressList[this.imgIndex].isShow = true;
+						}
+					},3000)
+				},
+				btnOpen: function(){
+					this.btnShow = true;
+					clearInterval(this.imgTimer);
+				},
+				btnHide(){
+					this.btnShow = false;
+					this.imgMove();
+				},
+				leftClick() {
+					var Item = document.getElementsByClassName('item');
+					this.numList.unshift(this.numList[(Item.length-1)]);
+					this.numList.pop();
+					this.imgIndex--;
+					for(var i = 0; i < Item.length; i++){
+						Item[i].className = 'item ' + this.numList[i];
+					}
+					for(var i in this.pressList){
+						this.pressList[i].isShow = false;
+					}
+					//然后让当前第imgIndex个的isShow为true。
+					if(this.imgIndex < 0){
+						this.imgIndex = Item.length - 1;
+						this.pressList[this.imgIndex].isShow = true;
+					}else {
+						this.pressList[this.imgIndex].isShow = true;
+					}
+				},	
+				rightClick() {
+					var Item = document.getElementsByClassName('item');
+					this.numList.push(this.numList[0]);
+					this.numList.shift();
+					this.imgIndex++;
+					for(var i = 0; i < Item.length; i++){
+						Item[i].className = 'item ' + this.numList[i];
+					}
+					for(var i in this.pressList){
+						this.pressList[i].isShow = false;
+					}
+					//然后让当前第imgIndex个的isShow为true。
+					if(this.imgIndex > (Item.length-1)){
+						this.imgIndex = 0;
+						this.pressList[this.imgIndex].isShow = true;
+					}else {
+						this.pressList[this.imgIndex].isShow = true;
+					}
+				},
+				change: function(index){
+					console.log(index)
+					var Item = document.getElementsByClassName('item');
+					var x = 0;
+					if(index >= this.imgIndex){
+						x = index - this.imgIndex;
+					}else {
+						x = Item.length + index - this.imgIndex;
+					};
+					this.imgIndex += x;
+					var arr = [];
+					for(var i = 0; i < Item.length; i++){
+						if((i + x) < Item.length){
+							arr[i] = this.numList[i+x];
+						}else {
+							arr[i] = this.numList[i+x-Item.length];
+						}	
+					}
+					for(var i = 0; i < Item.length; i++){
+						Item[i].className = 'item ' + arr[i];
+					}	
+					//先让isShow全部为false
+					for(var i in this.pressList){
+						this.pressList[i].isShow = false;
+					}
+					//然后让当前第imgIndex个的isShow为true。
+					if(this.imgIndex > (Item.length-1)){
+						this.imgIndex = 0;
+						this.pressList[this.imgIndex].isShow = true;
+					}else {
+						this.pressList[this.imgIndex].isShow = true;
+					}
+					console.log(Item)
+					// for(var i = 0; i < Item.length; i++){
+					// 	console.log(i)
+					// }
+					// console.log(this.imgIndex)
+					
+				}
+			}
+		})
+	</script>
+</html>

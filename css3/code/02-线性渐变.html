@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>线性渐变</title>
+		<style type="text/css">
+			/* @import url('https://fonts.googleapis.com/css?family=Poppins:100,200,300,400,500,600,700,800,900'); */
+			*{
+				margin: 0;
+				padding: 0;
+				font-family: "Cambria Math",sans-serif;
+			}
+			#app{
+				display:flex;
+				justify-content: center;
+			    position: absolute;
+				top: 0;
+				left: 0;
+				width: 100%;
+				height: 100%;
+				background: #010615;
+				flex-wrap: wrap;
+				z-index: -11;
+			}
+			.box{
+				position: relative;
+				top: 10px;
+				left: 10px;
+				width: 300px;
+				height: 450px;
+				background-color: #060c21;
+				margin: 20px;
+				transition: 2s ease;
+			}
+			.box:before{
+			    content: "";
+			    position: absolute;
+			    top: -2px;
+			    left: -2px;
+			    right: -2px;
+			    bottom: -2px;
+			    background: #FFFFFF;
+			    z-index:-1;
+				/* 控制边框效果 */
+			}
+			.box:after{
+			    content: "";
+			    position: absolute;
+			    top: -2px;
+			    left: -2px;
+			    right: -2px;
+			    bottom: -2px;
+			    /* background: #FFFFFF; */
+			    z-index:-2;
+			    filter: blur(40px);
+				/* 控制边框之后的光效 */
+			}
+/* 			.box:before,.box :after{
+			    background:linear-gradient(235deg,#89ff00,#010615,#00bcd4);
+			} */
+			.box:nth-child(1):before,
+			.box:nth-child(1):after
+			{
+			    background:linear-gradient(235deg,#89ff00,#010615,#00bcd4);
+			}
+			.box:nth-child(3):before,
+			.box:nth-child(3):after
+			{
+			    background:linear-gradient(235deg,#772aff,#010615,#2196fc);
+			}
+			.box:nth-child(2):before,
+			.box:nth-child(2):after
+			{
+			    background:linear-gradient(235deg,#ff005e,#010615,#fbff00);
+			}
+			.box:nth-child(3):before,
+			.box:nth-child(3):after
+			{
+			    background:linear-gradient(235deg,#772aff,#010615,#2196fc);
+			}
+			.box .imgBox{
+			    position: absolute;
+			    top: 2px;     left: 0;
+				/* position位移是整个块内容位移 */
+			    
+			    padding: 20px;
+				/* 图片相当于文字内容，受padding影响 */
+			
+			}
+			.box:hover{
+			    height: 550px;
+				
+			}
+			.box .imgBox img{
+			    max-width:100%;
+			    opacity: 0.1;
+			    transition: 2s ease;
+			}
+			.box:hover .imgBox img{
+			     opacity: 1;
+			
+			}
+			.box .content{
+			    position: absolute;
+			    bottom: 0;
+			    left: 10px;
+			    right: 10px;
+			    height: 90px;
+			    background: rgba(0,0,0,0.4);
+			    text-align: center;
+			    display: flex;
+			    justify-content: center;
+			    align-items: center;
+			    opacity: 0;
+			    /*设置div盒子元素的背景透明度越靠近1越不透明*/
+			    transition: 0.5s;
+			    /*向下伸长实现效果时间*/
+			
+			}
+			.box .content{
+			    bottom: 10px;
+			}
+			
+			.box:hover .content{
+			    opacity: 1;
+			
+			}
+			.box .content h2{
+			    font-size: 20px;
+			    color: #FFFFFF;
+			    /* font-weight: 500; */
+			    line-height: 20px;
+			    /* letter-spacing: 1px; */
+			}
+			.box .content h2 span{
+			    font-size: 14px;
+			    color: #FFFFFF;
+			    /* font-weight: 200; */
+			    line-height: 20px;
+			    /* letter-spacing: 2px; */
+			}
+		</style>
+	</head>
+	<body>
+		<div id="app">
+			<div class="box">
+				<div class="imgBox">
+				    <img src="../dist/纯css可伸缩图文/img1.png" alt="">
+				</div>
+				<div class="content">
+				    <h2>Welcome to this text<br>
+				    <span>NTX-2020-4-17</span></h2>
+				</div>
+			</div>
+			<div class="box">
+			    <div class="imgBox">
+			        <img src="../dist/纯css可伸缩图文/img2.png" alt="">
+			    </div>
+			    <div class="content">
+			        <h2>Welcome to this text<br>
+			            <span>NTX-2020-4-17</span></h2>
+			    </div>
+			</div>
+			<div class="box">
+			    <div class="imgBox">
+			        <img src="../dist/纯css可伸缩图文/img3.png" alt="">
+			    </div>
+			    <div class="content">
+			        <h2>Welcome to this text<br>
+			            <span>NTX-2020-4-17</span></h2>
+			    </div>	
+			</div>
+		</div>
+		
+	</body>
+</html>

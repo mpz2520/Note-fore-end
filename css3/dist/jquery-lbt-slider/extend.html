@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<style type="text/css">
+			#input1{
+				
+			}
+		</style>
+	</head>
+	
+	<body>
+		<div>
+			<p>点击输入框</p>
+			<input type="text" id="input1">
+			
+		</div>
+		<script src="./js/jquery-1.11.3.min.js"></script>
+		<script src="./js/text02.js"></script>
+		<script src="./js/cjtext.js"></script>
+		<script type="text/javascript">
+			// jQuery.fn.extend({
+			//     alertWhileClick: function() {            
+			//           jQuery(this).click(function(){                 
+			//                 jQuery(this).css("background-color","#00BCD4")          
+			//            });   
+					
+			// 		// $(this).css("background-color","#00BCD4")
+			// 		// $(this).css({"background-color":"yellow","font-size":"200%"})	  
+			//      }       
+			// });       
+			 $("#input1").alertWhileClick();    //jQuery.fn.extend()里面的属性方法使用可以在$后面带选择器参数
+			
+			// jQuery.extend({
+			// min: function(a, b) { return a < b ? a : b; },
+			// max: function(a, b) { return a > b ? a : b; }
+			// });
+			// jQuery("#input1").click(function(){
+			// 	// alert($.min(2,3));      //注意到没有jQuery.extend()里面的属性方法使用方式是这样$.min(2,3)
+			// 	jQuery(this).css("background-color","#00BCD4")
+			// })
+			
+			
+			//jQuery("#input1").后面可以带jquery原生方法，不能是jQuery.extend()里面的属性方法
+			// jQuery("#input1").css("background-color","#00BCD4")
+			
+			
+
+		</script>
+	</body>
+</html>

@@ -1,0 +1,75 @@
+<!-- 
+  不在函数内的css()方法，里面的属性要加""引号
+  在函数内的css()方法，属性可以不加""引号，而且数字单位会自动匹配px，而且变量属性或属性值不需要引号
+  另注意：
+  例如：backgroundColor与background-color，前者引号可要可不要，后者一定要，可能是中间有-的变量需要加引号
+ -->
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<style type="text/css">
+			div{
+				/* font-size: 20px; */
+				/* background-color: blue; */
+			}
+		</style>
+	</head>
+	<body>
+		<div class="main">abc
+			<p class="a1">aaa</p>
+			<p class="a2">bbb</p>
+			<p class="a3">ccc</p>
+			<p class="a4">ddd</p>
+		</div>
+		<div class="main2">abc
+			<p class="a1">aaa</p>
+			<p class="a2">bbb</p>
+			<p class="a3">ccc</p>
+			<p class="a4">ddd</p>
+		</div>
+		<script src="./js/jquery-1.11.3.min.js"></script>
+		<script type="text/javascript">
+
+        // $('.a3, .a2').css({
+        //     "background-color": "#00BCD4",
+        // });
+		
+		function Slider(val){
+			this.wrap = val.wrap; 
+			this.width = val.width;
+			this.height = val.height;
+			this.btnBackgroundColor = val.btnBackgroundColor;
+			this.initStyle();
+		}
+		Slider.prototype.initStyle = function(){
+			$('*', this.wrap).css({
+				display: 'block',
+			    margin: '10px',
+			    padding: 2,
+				width: this.width + 'px',
+				height: this.height,
+				color: this.btnBackgroundColor,   //等于 color: 'red',
+				// 'color': this.btnBackgroundColor,
+				//backgroundColor: 'yellow',
+				'background-color': 'blue'
+			});
+			$('.a2', this.wrap).css({
+				'font-size': '30px',
+			});
+		}
+		$.fn.extend({
+			mpz: function(val){
+				val.wrap = this;
+				new Slider(val);
+			}
+		})
+		$('.main2').mpz({
+			width: 100, //图片的宽
+			height: 30, //图片的高
+			btnBackgroundColor: 'red',
+		})
+		</script>
+	</body>
+</html>
