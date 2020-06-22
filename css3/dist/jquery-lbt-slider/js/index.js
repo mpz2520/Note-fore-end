@@ -62,7 +62,9 @@
             this.autoMove()
         }
 		function test() {
-			
+			/*
+			function test()替换Slider.prototype.createDom
+			*/
 		    var oUl = $('<ul class="imgList"></ul>');
 		    var Spot = $('<div class="spot"></div>')
 		    ccc.forEach(function(item) {
