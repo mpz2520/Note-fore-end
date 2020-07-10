@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>带参数的自定义指令</title>
+		<script src="js/vue.js"></script>
+	</head>
+	<body>
+		<div id="app">
+			<input type="text" v-color="msg" v-focus>
+			<input type="text" v-focus>
+		</div>
+		<script>
+			// 注册全局自定义指令
+			// Vue.directive('color',{
+			// 	bind: function(el,aaa){  //bingding是形参，是一个对象，包含三个属性，名字可以随意取，如改aaa，但el是固定的，指所绑定的元素
+			// 		console.log(aaa)
+			// 		console.log(aaa.value.color)
+			// 		//根据指令的参数设置背景颜色
+			// 		el.style.background = aaa.value.color
+			// 		// name: "color"  定义的指令名
+			// 		// rawName: "v-color"   
+			// 		// value: {__ob__: Observer}  指绑定的msg
+			// 	}
+			// })
+			var vm = new Vue({
+				el : "#app",
+				data : {
+					msg : {
+						color : 'blue'
+					}
+				},
+				
+				//注册局部自定义指令
+				directives:{
+					color:{
+						bind:function(el,binding){
+							el.style.background = binding.value.color;
+						}
+					},
+					focus:{
+						inserted:function(el){
+							el.focus();   
+						}
+					}
+				}	
+			});
+			
+		</script>
+	</body>
+</html>

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<script src="js/vue.js"></script>
+	</head>
+	<body>
+		<div id="app">
+			<div>{{msg}}</div>
+			<div @click="update">更新阶段触发的钩子函数</div>
+			<div @click="destroy">销毁阶段触发的钩子函数</div>
+		</div>
+		<script>
+			var vm = new Vue({
+				el : '#app',
+				data :{
+					msg : '生命周期'
+				},
+				methods: {
+					update : function(){
+						this.msg = 'hello'
+					},
+					destroy : function(){
+						this.$destroy();
+					}		
+				},
+				// 生命周期的钩子函数
+				beforeCreate : function(){
+					console.log('beforeCreate')
+				},
+				create  : function(){
+					console.log('create ')
+				},
+				beforeMount : function(){
+					console.log('beforeMount')
+				},
+				mounted : function(){
+					console.log('mounted')
+				},
+				beforeUpdate : function(){
+					console.log('beforeUpdate')
+				},
+				update : function(){
+					console.log('update')
+				},
+				beforeDestroy : function(){
+					console.log('beforeDestroy')
+				},
+				destroy : function(){
+					console.log('destroy')
+				}		
+			})
+		</script>
+	</body>
+</html>

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>组件插槽</title>
+		<script src="js/vue.js"></script>
+		<style>
+			.color{
+				color:orange;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="app">
+			<alert-box>有bug发生</alert-box>
+			<alert-box>有个警告</alert-box>
+			<alert-box></alert-box>
+			<hr>
+			<base-layout>
+				<h2 slot="header">标题信息1</h2>
+				<h2 slot="header">标题信息2</h2>
+				<!-- 与下面用template包裹起来效果一样 -->
+				<p>主要内容1</p>
+				<p>主要内容2</p>
+				<p slot="footer">底部信息</p>
+			</base-layout>
+			<hr>
+			<base-layout>
+			  <template v-slot:header>
+				  <!-- v-slot 与 slot 效果一样 -->
+				  <!-- template是vue的API，用于包裹多个标签 -->
+			    <h1>标题信息1</h1>
+				<h1>标题信息2</h1>
+			  </template>
+			  <p>主要内容1</p>
+			  <p>主要内容2</p>
+			  <template slot:footer>
+			    <p>底部信息1</p>
+				<p>底部信息2</p>
+			  </template>
+			</base-layout>
+			<hr>
+			<h3>插槽作用域演示</h3>
+			<fruit-list v-bind:list="list">
+				<template slot-scope="abc">
+					<!-- slot-scope可以属性获取到子组件<slot>中绑定的属性 -->
+					<strong v-if="abc.info.id==3" class="color">{{abc.info.name}}</strong>
+					<span v-else>{{abc.info.name}}</span>
+				</template>
+			</fruit-list>
+		</div>
+		<script type="text/javascript">
+			/*
+			组件插槽
+			*/
+		   Vue.component('alert-box',{
+			 template:`
+			   <div>
+				 <strong>Error:</strong>
+				 <slot>默认内容</slot>
+			   </div>
+			`
+		   });
+		   /*
+		   具名插槽
+		   */
+		   Vue.component('base-layout',{
+			 template:`
+			   <div class="container">
+			     <header>
+			       <slot name="header"></slot>
+			     </header>
+			     <main>
+			       <slot></slot>
+			     </main>
+			     <footer>
+			       <slot name="footer"></slot>
+			     </footer>
+			   </div>
+			`
+			});
+			
+			/*
+			作用域插槽
+			*/
+		   Vue.component('fruit-list',{
+			   props:['list'],
+			 template:`
+			   <div class="container">
+			     <li :key='item.id' v-for='item in list'>
+				 <slot :info='item'>{{item.name}}</slot>
+				 <!-- 绑定一个属性，名字为info，它的值为遍历得到的数组item -->
+				 </li>
+			   </div>
+			`
+			});
+			var vm = new Vue({
+			   el: '#app',
+			   data:{ 
+				   list:[{
+					   id:1,
+					   name:'apple'
+				   },{
+					   id:2,
+					   name:'orange'
+				   },{
+					   id:3,
+					   name:'banana'
+				   }]
+			   }
+			});
+		</script>
+	</body>
+</html>

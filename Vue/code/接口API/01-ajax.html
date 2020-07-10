@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+	</head>
+	<body>
+		<script type="text/javascript" src="js/jquery.js">
+		</script>
+		<script type="text/javascript">
+			/*
+			ajax前后端交互
+			*/
+		   
+		   //执行顺序不确定
+		   // $.ajax({
+			  //  url:'http://localhost:3000/data',
+			  //  success: function(data){
+				 //   console.log(data)
+			  //  }
+		   // });
+		   // $.ajax({
+		   // 			   url:'http://localhost:3000/data1',
+		   // 			   success: function(data){
+		   // 				   console.log(data)
+		   // 			   }
+		   // });
+		   // $.ajax({
+		   // 			   url:'http://localhost:3000/data2',
+		   // 			   success: function(data){
+		   // 				   console.log(data)
+		   // 			   }
+		   // });
+		   
+		   //通过嵌套，顺序执行
+		   $.ajax({
+		   			   url:'http://localhost:3000/data',
+		   			   success: function(data){
+		   				   console.log(data)
+						   $.ajax({
+						   			   url:'http://localhost:3000/data1',
+						   			   success: function(data){
+						   				   console.log(data)
+										   $.ajax({
+										   			   url:'http://localhost:3000/data2',
+										   			   success: function(data){
+										   				   console.log(data)
+										   			   }
+										   });
+						   			   }
+						   });
+		   			   }
+		   });
+		   
+		  
+		</script>
+	</body>
+</html>

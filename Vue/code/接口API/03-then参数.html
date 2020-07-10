@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+	</head>
+	<body>
+		<script type="text/javascript">
+		/*
+		基于Promise发送 Ajax请求
+		*/
+	   
+	   //封装一个独立的函数
+	   function queryData (url){
+		  return new Promise(function(resolve,reject){
+			   var xhr = new XMLHttpRequest();
+			   xhr.onreadystatechange = function(){
+				   if(xhr.readyState != 4) return;
+				   if(xhr.readyState == 4 & xhr.status == 200){
+					   //处理正常情况
+					   resolve(xhr.responseText)
+				   }else{
+					   //处理异常
+					   reject('服务器异常')
+				   }
+			   };
+			   xhr.open('get',url);
+			   xhr.send('abc');
+		   });
+		    
+	    };
+		
+		
+	
+		 queryData('http://localhost:3000/data')   
+		  .then(function(data){
+			   // 得到的是上个then返回的Promise对象的异步任务的结果
+			  console.log(data)
+			  return queryData('http://localhost:3000/data1'); 
+		  })     
+		   .then(function(data){
+			    // 得到的是上个then返回的Promise对象的异步任务的结果
+				console.log(data)
+			   return new Promise(function(resolve,reject){
+				   setTimeout(function(){
+					   resolve(123);
+				   },1000)
+			   });
+		   })
+		   .then(function(data){
+			   // 得到的是上个then返回的Promise对象的异步任务的结果
+			   console.log(data)
+			   return 'hello vue'
+			   // 返回普通值，或不返回值时，怎么调用下一个then呢
+			   //实际上会产生一个产生一个新的默认的Promise对象去调用下一个then。
+		   })
+		   .then(function(data){
+			   console.log(data)
+		   })
+		</script>
+	</body>
+</html>

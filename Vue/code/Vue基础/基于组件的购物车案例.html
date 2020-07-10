@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>基于组件的购物车案例</title>
+		<script src="js/vue.js"></script>
+		<style>
+			.container{width: 300px;text-align: center;margin:auto;}
+			.cart a{text-decoration: none;display: inline-block;width: 20px;height: 30px;line-height: 30px;background: #dbcbde;vertical-align:middle;}
+			.title{height: 40px;background: royalblue;line-height: 40px;}
+			.item{height: 50px;border-bottom: 1px solid #989898;}
+			.test :last-child{border: none;}
+			.item img{width: 30px;height: 30px; float: left;margin: 10px 10px 10px 5px;}
+			.item .name{display: inline-block;width: 120px;height: 30px;float: left;line-height: 50px;text-align: left;}
+			.item .change{width: 100px; height: 50px;line-height: 50px;float: left;}
+			.item .change input{width: 40px;height: 30px;}
+			.item .del{height: 35px;width: 25px;float: right;line-height: 35px;font-size: 28px;color: red;margin:10px 5px 0 0;cursor: pointer;}
+			.item .del:hover{background-color: #FFA500;}
+			.total{height: 50px;line-height: 50px;background: #ffaa00;}
+			.total span{font-size: 20px;color: #fa0000;display: inline-block;position: relative;left: 20px;top: 0px;width: 150px;text-align: right;padding-right: 5px;}
+			.total button{ height: 35px;width: 80px;background: #FA0000;border: none;
+			              outline: none;position: relative;top: -2px;left: 20px; }
+
+		</style>
+	</head>
+	<body>
+		<div id="app">
+			<div class="container">
+				<my-cart></my-cart>
+			</div>
+		</div>
+		<script type="text/javascript">
+			/*
+			步骤
+			1，实现整体布局和样式效果
+			2，划分独立的功能组件
+			3，组合所以的子组件形成整体结构
+			4，逐个实现各个组件的功能
+			    * 标题组件
+				* 列表组件
+				* 结算组件
+			*/
+			var CartTitle = {
+				// 通过props得到来自父组件的name属性
+				props: ['name'],
+				// 显示name属性值
+				template:`<div class="title">{{name}}的商品</div>`
+			}
+			var CartList = {
+				props:['list'],
+				template:`
+				<div class="test">
+					<div :key='item.id' v-for='item in list' class="item">
+						<img :src="item.img"/>
+						<div class="name">{{item.name}}</div>
+						<div class="change">
+							<a href="" @click.prevent='sub(item.id)'>-</a>
+							<input type="text" class="num" :value='item.num' @blur='changeNum(item.id,$event)'>
+							<a href="" @click.prevent='add(item.id)'>+</a>
+						</div>
+						<div class="del" @click='del(item.id)'>x</div>
+						<!-- 这里给函数传递的item.id参数是遍历list数组的某项的item.id,然后你点击哪一项item，就传递该项item的id-->
+					</div>
+				</div>
+				`,
+				methods: {
+					changeNum: function(id,event){
+						// console.log(id,event.target.value) 
+						//通过触发自定义事件，帮id与当前值传给父组件
+						this.$emit('change-num',{
+							id: id,
+							num: event.target.value,
+							type:'change'
+						})
+					},
+					sub: function(id){
+						this.$emit('change-num',{
+							id: id,
+							type: 'sub'
+						})
+					},
+					add: function(id){
+						this.$emit('change-num',{
+							id: id,
+							type: 'add'
+						})
+					},
+					del: function(id){
+						//console.log(id)
+						//把id传给父组件
+						this.$emit('cart-del',id);
+					}
+				}
+			}
+			var CartTotal = {
+				props:['list'],
+				template:`
+				<div class="total">
+					<span>总价:{{total}}</span>
+					<button type="button">结算</button>
+				</div>
+				`,
+				computed: {
+					total: function(){
+						// 计算商品的总价
+						var t = 0;
+						this.list.forEach((item) => {
+							t += item.price * item.num; 
+						});
+						return t;
+					}
+				}
+				
+			}
+			Vue.component('my-cart',{
+				data:function(){
+					return {
+						uname:'张三',
+						list: [{
+							id: 1,
+							name: 'TCL洗衣机',
+							price: 1000,
+							num: 1,
+							img: 'img/01.jpg'
+						},{
+							id: 5,
+							name: 'NBA篮球',
+							price: 1000,
+							num: 1,
+							img: 'img/02.jpg'
+						},{
+							id: 3,
+							name: '小米音响',
+							price: 1000,
+							num: 1,
+							img: 'img/03.jpg'
+						},{
+							id: 4,
+							name: '小米耳机',
+							price: 1000,
+							num: 2,
+							img: 'img/04.jpg'
+						}]
+					}
+				},
+				template:`
+				<div class="cart">
+				    <!-- 绑定一个自定义的属性name，并把组件中的uname属性赋予它 -->
+					<cart-title :name='uname'></cart-title>
+					<cart-list :list='list' @cart-del='delCart($event)' @change-num='changeNum($event)'></cart-list>
+					<!-- delCart中的$event是上面传过来的id，changeNum中的$event是上面传过来的对象{id:id,num:event.target.value} -->
+					<cart-total :list='list'></cart-total>
+				</div>
+				`,
+				components:{
+					'cart-title': CartTitle,
+					'cart-list': CartList,
+					'cart-total': CartTotal,
+				},
+				methods:{
+					changeNum: function(val){
+						//分为三种情况: 输入域变更，减号变更，加号变更
+						if(val.type == 'change'){
+							//console.log(val)
+							this.list.some(item=>{
+								if(item.id == val.id){
+									item.num = val.num;
+									//终止遍历
+									return true;
+								};
+							});
+						}else if(val.type == 'sub'){
+							//减一操作
+							this.list.some(item=>{
+								if(item.id == val.id){
+									item.num -= 1;
+									//终止遍历
+									return true;
+								};
+							});
+						}else if(val.type == 'add'){
+							//加一操作
+							this.list.some(item=>{
+								if(item.id == val.id){
+									item.num += 1;
+									//终止遍历
+									return true;
+								};
+							});
+						};	
+					},
+					delCart: function(id){
+						//工具id删除list中的数据
+						//1，找到id所对应的索引
+						var index = this.list.findIndex(item =>{
+							return item.id == id;
+						})
+						//2，根据索引删除数据
+						this.list.splice(index,1)
+						console.log(index)
+					}
+				}
+			})
+			var vm = new Vue({
+				el: '#app',
+				data: {}
+			})
+		</script>
+	</body>
+</html>

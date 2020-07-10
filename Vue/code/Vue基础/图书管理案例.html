@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>图书管理</title>
+		<script src="js/vue.js"></script>
+	</head>
+	<style>
+		.grid{
+			margin:auto;
+			width: 500px;
+			text-align: center;
+		}
+		.grid th,.grid td{
+			padding: 10px;
+			border: 1px dashed #F3DCAB;
+			height: 35px;
+			line-height: 35px;
+		}
+		.grid th{
+			background-color: #F3DCAB;
+		}
+		.grid table{
+			width:100%;
+			border-collapse:collapse ;  /*边框会合并为一个单一的边框*/
+			border-top: 1px solid #C2D89A;
+		}
+		.grid .book{
+			padding: 5px 0 10px;
+			background-color: #F3DCAB;
+		}
+		.grid .total {
+			height:30px;
+			line-height: 30px;
+			border-top:1px solid #C2D89A;
+			background:#F3DCAB;
+		}
+	</style>
+	<body>
+		<div id="app">
+			<div class="grid">
+				<div>
+					<h1>图书馆</h1>
+					<div class="book">
+						<div>
+							<label for="index">编号:</label>
+							<input type="text" id="index" v-model="id" :disabled="flag" v-focus>
+							<label for="name">名称:</label>
+							<input type="text" id="name" v-model="name">
+							<button @click="handle">提交</button>
+						</div>
+					</div>
+				</div>
+				<div class="total">
+					<span>图书总数:</span>
+					<span>{{total}}</span>
+				</div>
+				<table>
+					<thead>
+						<tr>
+							<th>编号</th>
+							<th>名称</th>
+							<th>时间</th>
+							<th>操作</th>
+						</tr>	
+					</thead>
+					<tbody>
+						<tr :key="item.id" v-for="item in books">
+							<td>{{item.id}}</td>
+							<td>{{item.name}}</td>
+							<td>{{item.date | format(aaa)}}</td>
+							<td>
+								<a href="" @click.prevent="toEdit(item.id)">修改</a>
+								<!-- 这里的item.id是父级"item in books"中的item ,也就是上面{{item.id}}的值一样的-->
+								<!-- @click.prevent阻止默认行为，小细节，一般点击事件后面会绑定函数，其实可以不绑定函数 -->
+								<span>|</span>
+								<a href="" @click.prevent="deleteBook(item.id)">删除</a>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+		<script>
+			// 过滤器案例，格式化日期
+			Vue.filter('format',function(val,arg1){
+				if(arg1 == "aaa"){
+					var ret = '';
+					ret += val.getFullYear() + '-' + (val.getMonth() + 1) + '-' + val.getDate();
+					return ret;  //返回ret值，结束函数
+				}
+				return val;   //如果arg1不等于'aaa',则返回val值
+			});
+            // 注册全局自定义指令
+			Vue.directive('focus',{
+				inserted: function(el){
+					el.focus();
+					}
+			})
+			// vue实例
+			vm = new Vue({
+				el:"#app",
+				data:{
+					flag:false,
+					id:"",
+					name:"",
+					books:[]
+				},
+				methods:{
+					handle:function(){
+						if(this.flag){
+							// 编辑操作
+							// 根据当前ID更新数组中对应的数据
+							this.books.some((item) => {
+								// 上面使用了箭头函数，箭头函数内的this指的是定义这个函数的父级作用域的this，
+								// 而该父级作用域是handle的作用域，handle中的this指的是Vue实例本身
+								if(item.id == this.id){
+									item.name = this.name;
+									// 完成数据更新后，终止循环
+									return true;
+								}
+							});
+							
+						}else{
+							//添加图书
+							var book = {};
+							book.id = this.id;
+							book.name = this.name;
+							book.date = "";
+							this.books.push(book);
+							// 清空表单,测试不用清空效果一样
+							// this.id = "";
+							// this.name = "";
+						}
+						this.flag =false;
+						this.id ='';
+						this.name ='';
+					},
+					toEdit:function(id){
+						// 终止修改ID
+						this.flag = true;
+						console.log(id);
+						// 根据ID查出要编辑的数据
+						var book = this.books.filter(function(item){
+							// item参数表示遍历this.books数组的每一项数据
+							return item.id == id;   //返回匹配为true的该组数据，
+						});
+						console.log(book);
+						// 把获取的信息填充到表单
+						this.id = book[0].id;
+						this.name = book[0].name
+					},
+					deleteBook:function(id){
+						// 根据ID找到要删除的元素
+						// var index = this.books.findIndex(function(item,idx,arr){
+						// 	console.log(idx);
+						// 	console.log(arr);
+						// 	return item.id == id;
+						// });
+						// this.books.splice(index,1);
+						
+						// 方法二，通过filter方法进行删除
+						this.books = this.books.filter(function(item){
+							// 返回不等于ID的数组项
+							return item.id != id
+						})
+					}
+				},
+				computed:{
+					total:function(){
+						return this.books.length;
+					}
+				},
+				// 监听name属性值,验证图书名是否存在
+				watch:{
+					name:function(newval){
+						var flag = this.books.some(function(item){
+							return item.name == newval;
+						})
+					}
+				},
+				// 用生命周期钩子函数，模拟加载后台数据，mounted实例被挂载后调用
+				mounted: function(){
+					var houtaidata = [{
+							id:1,
+							name:'三国演义',
+							date:'202003011715'
+						},{
+							id:2,
+							name:'水浒传',
+							date:'202003011715'
+						},{
+							id:3,
+							name:'红楼梦',
+							date:'202003011715'
+						},{
+							id:4,
+							name:'西游记',
+							date:'202003011715'
+						}];
+					this.books = houtaidata;
+				}
+			});
+		</script>
+	</body>
+</html>

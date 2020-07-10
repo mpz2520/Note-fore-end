@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+	</head>
+	<body>
+		<script type="text/javascript">
+		/*
+		基于Promise发送 Ajax请求
+		*/
+	   
+	   //封装一个独立的函数
+	   function queryData (url){
+		   var p =  new Promise(function(resolve,reject){
+			   var xhr = new XMLHttpRequest();
+			   xhr.onreadystatechange = function(){
+				   if(xhr.readyState != 4) return;
+				   if(xhr.readyState == 4 & xhr.status == 200){
+					   //处理正常情况
+					   resolve(xhr.responseText)
+				   }else{
+					   //处理异常
+					   reject('服务器异常')
+				   }
+			   };
+			   xhr.open('get',url);
+			   xhr.send('abc');
+		   });
+		   return p
+	    };
+		
+		
+		// queryData('http://localhost:3000/data') 
+		//  //这里的.then()调用的是上面返回的promise对象
+		//  .then(function(data){
+		// 	 console.log(data)
+		//  },function(info){
+		// 	 console.log(info)
+		//  })
+		 
+		 //发送多个Ajax请求，并且保证顺序
+		 queryData('http://localhost:3000/data')   //这里结尾不能加 ; 否则无法识别 .then，因为queryData()方法返回p 相当于p.then 
+		  .then(function(data){
+			  console.log(data)
+			  return queryData('http://localhost:3000/data1');  //①
+		  })     //这里结尾不能加 ;  号
+		  
+		  .then(function(data){    //这里的.then();是上面① return queryData(); 返回的Promise对象，也就是p
+			  console.log(data);
+			  return queryData('http://localhost:3000/data2')
+		  })    //这里结尾不能加 ; 号
+		  .then(function(data){
+			  console.log(data);
+		  });
+		</script>
+	</body>
+</html>

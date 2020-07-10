@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+	</head>
+	<body>
+		
+		<script type="text/javascript">
+			/*
+			Promise基本用法
+			*/
+		   // console.log(typeof Promise);
+		   // console.dir(Promise)
+		   var p = new Promise(function(resolve1,reject2){
+			   //这里实现异步任务
+			   setTimeout(function(){
+				   var falg = false;
+				   if(falg){
+					   //正常情况
+					   resolve1('hello')
+				   }else{
+					   reject2('出错了')
+				   }
+			   },1000)
+		   })
+		   //通过p.then获取处理结果
+		   p.then(function(data){
+			   console.log(data)
+		   },function(info){
+			   console.log(info)
+		   });
+		 
+		</script>
+	</body>
+</html>

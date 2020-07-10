@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<script src="js/vue.js"></script>
+		<style type="text/css">
+			#hello{
+				width: 200px;
+				height: 200px;
+				background: green;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="app">
+			<input type="text" v-model="msg">
+			<div>{{msg | upper}}</div>
+			<div>{{msg | upper | lower}}</div>
+			<div v-bind:id="msg | lower"></div>
+			<!-- 过滤器案例 格式化日期 -->
+			<div>{{dateA | format("aaa")}}</div>
+			
+		</div>
+		<script type="text/javascript">
+			// 全局过滤器
+			Vue.filter('upper',function(val){
+				// 用原生的JavaScript方法，分别是截取首字符，大写，从第二个开始拼接
+				return val.charAt(0).toUpperCase() + val.slice(1);
+			}); 
+			Vue.filter('lower',function(val){
+				// toLowerCase()方法让内容变小写
+				return val.charAt(0).toLowerCase() + val.slice(1);
+			});
+			
+			// 过滤器案例，格式化日期
+			Vue.filter('format',function(val,arg1){
+				if(arg1 == "aaa"){
+					var ret = '';
+					ret += val.getFullYear() + '-' + (val.getMonth() + 1) + '-' + val.getDate();
+					return ret;  //返回ret值，结束函数
+				}
+				return val;   //如果arg1不等于'aaa',则返回val值
+			});
+			var vm = new Vue({
+				el : "#app",
+				data : {
+					msg : "",
+					dateA : new Date()
+				}
+			});
+		</script>	
+	</body>
+</html>

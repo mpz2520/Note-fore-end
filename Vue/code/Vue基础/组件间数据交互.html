@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>子组件间数据交互</title>
+		<script src="js/vue.js"></script>
+	</head>
+	<body>
+		<div id="app">
+			<div>{{pmsg}}</div>
+			<p>父组件向子组件传值案例</p>
+			<menu-item title="来自父组件的值" title2="hello"></menu-item>
+			<menu-item :title="ptitle" title2="hi"></menu-item>
+			<!-- title绑定字符串值,理解为来自html的值,而html也属于父组件 -->
+			<!-- title绑定ptitle是vue实例父组件data中的属性, -->
+			<menu-itemb :menu-txt="ptitle"></menu-itemb>
+			<br>
+			<hr>
+			<p>子组件向父组件传值案例</p>
+			<zi-fu :parr="fparr" @enlarge-text="handle"></zi-fu>
+			<!-- // 为了区分props的parr属性，与对应父组件中fparr值，也是parr属性的值 -->
+			<br><br>
+			<div :style="{fontSize: fontSize + 'px'}">{{ptitle}}</div>
+			<!-- :style可以绑定一个对象 -->
+			<div style="font-size: 10px; color: #008000;">{{pmsg}}</div>
+			<br>
+			<hr>
+			<!-- 子组件向父组件传值--携带参数	 -->
+			<p>子组件向父组件传值--携带参数的案例</p>
+			<div :style="{fontSize: fontSize2 + 'px'}">{{pmsg}}</div>
+			<zi-fu2 @enlarge-text="handle2($event)"></zi-fu2>
+		</div>
+		<script type="text/javascript">
+			/*
+			  1,父组件向子组件传递值
+			*/
+		   Vue.component('menu-item',{
+			   props: ['title','title2'],
+			   data: function(){
+				   return {
+					   msg: '子组件本身的数据'
+				   }
+			   },
+			   template:'<div>{{msg + "---" + title + "---" + title2}}</div>'
+		   })
+		   Vue.component('menu-itemb',{
+		   			   props: ['menuTxt'],
+		   			   template:'<div>{{menuTxt}}</div>'
+		   })
+		   
+		   /*
+		     2,子组件向父组件传值--基本用法
+			    props传递数据原则: 单向数据流，只适用于父组件向子组件传递值
+		   */
+		  Vue.component('zi-fu',{
+			  props:['parr'],
+			  template:`
+			  <div>
+			    <ul>
+				  <li :key='index' v-for='(item,index) in parr'>{{item}}</li>
+				</ul>
+				<button @click='parr.push("lemon")'>点击</button>
+				<!-- // 这里每次点击，都向父组件中的fparr数组添加一个"lemon"值，但vue官方不建议这样做， -->
+				<!-- // 原则是单向的数据流，让控制逻辑更简单清晰。 -->
+				<button v-on:click='$emit("enlarge-text")'>扩大字体</button> 
+				<!-- 通过自定义事件向父组件传递信息 -->
+			  </div>
+			  `
+		  })
+			  /*
+			    3,子组件向父组件传值--携带参数		 
+			  */
+		 Vue.component('zi-fu2',{
+			  
+			  template:`
+			  <div>		
+				<button v-on:click='$emit("enlarge-text",1)'>扩大字体2.0</button> 
+				<button v-on:click='$emit("enlarge-text",5)'>扩大字体2.1</button> 
+				<!-- 通过$emit方法触发自定义的事件,然后再html中绑定这个事件,就变成绑定事件型用法一样了 -->
+			  </div>
+			  `
+		  })
+			var vm = new Vue({
+				el:'#app',
+				data: {
+					pmsg: '父组件中的内容',
+					ptitle: '动态绑定属性值',
+					fparr: ['apple','orange','banana'],
+					fontSize: 10,
+					fontSize2: 5
+				},
+				methods:{
+					handle:function(){
+						// 扩大字体
+						this.fontSize += 5;
+					},
+					handle2:function(val){
+						this.fontSize2 += val;
+					}
+					
+				}
+			})
+		</script>
+	</body>
+</html>

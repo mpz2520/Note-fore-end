@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<script src="js/vue.js"></script>
+	</head>
+	<body>
+		<div id="app">
+			<span>姓：</span>
+			<input type="text" v-model="firstName">
+			<br>
+			<span>名：</span>
+			<input type="text" v-model="lastName">
+			<div>{{fullName}}</div>
+			<!-- <div>{{aaa}}</div> -->
+
+		</div>
+		<script type="text/javascript">
+			var vm = new Vue({
+				el : "#app",
+				data : {
+					firstName:'mai',
+					lastName: 'peizhao',
+					fullName: ''
+				},
+				//注册侦听器方法watch
+				watch:{
+					// 监听firstName
+					firstName:function(val){
+						// val是firstName的新值
+						this.fullName = val + '' + this.lastName;
+					},
+					lastName:function(val){
+						this.fullName = this.lastName + '' + val;
+					}
+				}
+				// //使用methods方法
+				// methods:{
+				// 	// 要注释掉data中的fullName，或避免冲突重新命名为abc，因为这里的意思是定义一个方法，而不是监听某个属性
+				// 	fullName:function(){
+				// 		return this.firstName + '' + this.lastName
+				// 	}
+				// },
+				// //使用计算属性
+				// computed:{
+				// 	aaa:function(){
+				// 	return this.firstName + '' + this.lastName
+				// 	}
+				// }
+			});	
+		</script>
+	</body>
+</html>

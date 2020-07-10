@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>axios基本用法</title>
+		
+	</head>
+	<body>
+		<script type="text/javascript" src="public/axios.js"></script>
+		<script type="text/javascript">
+			axios.get('http://localhost:3000/adata')
+			  .then(ret=>{
+				  console.log(ret.data);
+			  })
+			
+			//带参数传递--传统的URL传递参数
+			axios.get('http://localhost:3000/axios?id=123')
+			   .then(ret=>{
+			   	  console.log(ret.data);
+			   })
+			//Resetful形式的URL传递参数
+			axios.get('http://localhost:3000/axios/123')
+			   .then(ret=>{
+			   	  console.log(ret.data);
+			   }) 
+			//params对象传递参数
+			axios.get('http://localhost:3000/axios',{
+				params: {
+					id: 789
+				}
+			})
+			   .then(ret=>{
+			   	  console.log(ret.data);
+			   })
+			axios.delete('http://localhost:3000/axios',{
+				params: {
+					id: 111
+				}
+			})
+			   .then(ret=>{
+			   	  console.log(ret.data);
+			   })	
+				   
+			//POST
+			axios.post('http://localhost:3000/axios',{
+				uname: 'Tom',
+				pwd: 789
+			})
+			   .then(ret=>{
+				  console.log(ret.data);
+			   })	
+			
+			//通过URLSearchParams传递参数	  
+			const params = new URLSearchParams();
+			params.append('uname','张三')	
+			params.append('pwd','123456')
+			axios.post('http://localhost:3000/axios',params)
+			   .then(ret=>{
+				  console.log(ret.data);
+			   })
+			   
+			//PUT  (post方式的URL地址带参数会报错)
+			axios.put('http://localhost:3000/axios/123',{
+				uname: 'Jurry',
+				pwd: 87654321
+			})
+			   .then(ret=>{
+				  console.log(ret.data);
+			   })
+			/*
+			   axios响应结果与全局配置
+			 */
+			axios.get('http://localhost:3000/axios-json').then(ret=>{
+				 console.log(ret.data.pwd);
+			   })
+			 //设置请求的基准URL地址  
+			 axios.defaults.baseURL='http://localhost:3000';      //URL地址结尾没/会自动添加/
+			 //配置请求头信息
+			 axios.defaults.headers['mytoken'] = 'hello';    //注意要在后台设置对应允许mytoken请求
+			 axios.get('axios-json').then(ret=>{
+			 	 console.log(ret.data.uname);
+			    })
+			
+			/*
+			  axios请求拦截器
+			*/
+			axios.interceptors.request.use(function(config){
+				console.log(config.url)
+				config.headers.mytoken = 'nihao'
+				return config;
+			},function(err){
+				console.log(err)
+			})
+			axios.interceptors.response.use(function(res){
+				// console.log(res);
+				var data = res.data;
+				return data;
+			},function(err){
+				console.log(err)
+			})
+			axios.get('http://localhost:3000/adata').then(function(data){
+				console.log(data)
+			})
+		
+				
+		</script>
+	</body>
+</html>

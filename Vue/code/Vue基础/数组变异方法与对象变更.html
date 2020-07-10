@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<script src="js/vue.js"></script>
+	</head>
+	<body>
+		<div id="app">
+			<span>
+				<input type="text" v-model="fname">
+				<button @click="add">添加</button>
+				<button @click="del">删除</button>
+				<button @click="change">替换</button>
+			</span>
+			<ul>
+				<li :key="index" v-for="(items,index) in list">{{items}}</li>
+			</ul>
+			<br>
+			//响应式修改数据
+			<div>{{info}}</div>
+			<div>{{info.name}}</div>
+			<div>{{info.age}}</div>
+			<div>{{info.gender}}</div>
+			
+		</div>
+		<script>
+			vm = new Vue({
+				el : '#app',
+				data : {
+					fname : '',
+					list : ['apple','orange','banana'],
+					ceshi : '',
+					info : {
+						name :'mpz',
+						age : 18
+					}
+				},
+				methods:{
+					add : function(){
+						this.list.push(this.fname);
+					},
+					del :function(){
+						this.list.shift();  //响应式方法，数据改变同时页面重新渲染
+						// this.ceshi = this.list.pop();  //跟上面结果一样，只是把返回值赋给this.ceshi
+					},
+					change : function(){
+						// this.list = this.list.slice(1,3); //截取数组从索引1开始，到第三个
+						// this.list = ['apple123','orange123'];  // 响应式的
+						//可见，this.list是响应式，而this.list.slice(1,3)只是替换数组，并不是响应式
+						// 官方说明类似`vm.a` 也是响应式的
+					}
+				}
+			})
+			vm.list[1] = 'lemon'   //控制台输入vm.list[1] ->结果为"lemon"。可见后台数据已经改变了，但页面没有改变。因为它不是响应式的
+			// Vue.set(vm.list,0,'pear');  //
+			vm.$set(vm.list,0,'pear'); //vm实例对象方法，与Vue.set方法用法一样
+			vm.info.gender = 'male';   //这样添加的对象属性不是响应式。数据页面能显示内容，但在控制台输入vm.info.gender ='female'，不能改变页面内容，时间数据已经改了，
+			//在控制台输入vm.info.age = 20 ，vm.info.name ='mai' ，数据改变同时页面也改变，这说明原先定义的对象属性默认是响应式的
+			vm.$set(vm.info,'dizhi','湛江') //添加响应式数据，在控制台输入vm.info.dizhi ='雷州'，数据改变同时页面也改变
+		</script>
+	</body>
+</html>

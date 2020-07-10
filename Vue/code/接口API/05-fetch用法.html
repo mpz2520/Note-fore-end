@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+	</head>
+	<body>
+		<script type="text/javascript">
+			/*
+			fetch API 基本用法
+			*/
+		 //   fetch('http://localhost:3000/fdata')  
+		 //   .then(function(data){
+			//    //fetch请求不能直接获取数据，需要一些方法，例如text()方法
+			//    //text()方法属于fetch API的一部分，它返回一个Promise实例对象，用于获取后台返回的数据
+			//    return data.text();
+		 //   })
+		 //   .then(data => {
+			//    console.log(data)
+		 //   })
+		   
+		 //   //传统URL格式
+		 //   fetch('http://localhost:3000/books?id=124',{
+			//    method: 'get'
+		 //   })
+			// .then(data=>{
+			// 	return data.text();
+			// }).then(data=>{
+			// 	console.log(data);
+			// }) 
+			
+			// //Resetful形式的URL传递参数
+			// fetch('http://localhost:3000/books/456',{
+			//   method: 'get'
+			// })
+			// .then(data=>{
+			// 	return data.text();
+			// }).then(data=>{
+			// 	console.log(data);
+			// }) 
+
+   //          //deltet请求参数
+			// fetch('http://localhost:3000/books/789',{
+			//   method: 'delete'
+			// })
+			// .then(data=>{
+			// 	return data.text();
+			// }).then(data=>{
+			// 	console.log(data);
+			// }) 
+			
+			//post请求
+			fetch('http://localhost:3000/books',{
+				method: 'post',
+				body: 'uname=张三&pwd=124',
+				headers: {
+						'Content-Type': 'application/x-www-form-urlencoded'
+					}
+			}).then(data=>{
+					  return data.text();
+			}).then(data=>{
+					  //注意，这里得到才是最终的数据
+					  console.log(data);
+			})
+
+			//post请求 --json格式
+			fetch('http://localhost:3000/books',{
+				method: 'post',
+				body: JSON.stringify({
+					uname: '李四',
+					pwd: '456789'
+				}),
+				headers: {
+						'Content-Type': 'application/json'
+					}
+			}).then(data=>{
+					  return data.text();
+			}).then(data=>{
+					  //注意，这里得到才是最终的数据
+					  console.log(data);
+			})
+			
+			//put请求  
+			fetch('http://localhost:3000/books/123',{
+				method: 'put',
+				body: JSON.stringify({
+					uname: '李四',
+					pwd: '456'
+				}),
+				headers: {
+						'Content-Type': 'application/json'
+					}
+			}).then(data=>{
+					  return data.text();
+			}).then(data=>{
+					  //注意，这里得到才是最终的数据
+					  console.log(data);
+			})
+			
+			//json格式请求
+			fetch('http://localhost:3000/json')
+			 .then(data=>{
+				 //json方法，返回 JavaScript 对象
+				 //return data.json();
+				 
+				 //text()方法，返回字符串格式
+				 return data.text();
+			 })
+			 .then(data=>{
+				 //json输出测试
+				 // console.log(data);
+				 // console.log(data.uname);
+				 // console.log(typeof data);
+				 
+				 //text()输出测试
+				 console.log(typeof data);
+				 var obj = JSON.parse(data);  //转换成JavaScript 对象
+				 console.log(obj.uname,obj.age, obj.gender)
+			 })
+		</script>
+	</body>
+</html>

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>组件开发</title>
+		<script src="js/vue.js"></script>
+	</head>
+	<body>
+		<div id="app">
+			<counter>123</counter>
+			<counter>忽略这里的值</counter>
+			<counter>每隔组件有自己独立的数据</counter>
+			<hr>
+			<helloworld></helloworld>
+		</div>
+		<script>
+			
+			// Vue.component('counter',{
+			// 	data:function(){
+			// 		return {
+			// 			count:0,
+						
+			// 		}
+			// 	},
+			// 	template:'<button @click="handle">点击了{{count}}次</button>',
+			// 	methods:{
+			// 		handle:function(){
+			// 			this.count += 2;
+			// 		}
+			// 	}
+			// })
+			// -----------------------------
+			// 模板字符串方式 单引号改 `` 注释号
+			Vue.component('counter',{
+				data:function(){
+					return {
+						count:0,
+					}
+				},
+				template:`
+				<div>
+				<button @click="handle">点击了{{count}}次</button>
+				<helloworld></helloworld>
+				<hr>
+				</div>
+				`,
+				methods:{
+					handle:function(){
+						this.count += 2;
+					}
+				}
+			})
+			//注册helloworld组件
+			Vue.component('helloworld',{
+				data:function(){
+					return {
+						msg:'HelloWorld'
+					}
+				},
+				template:'<div>{{msg}}</div>'
+			})
+			var vm = new Vue({
+				el : "#app",
+				data:{}
+			})
+		</script>
+	</body>
+</html>
