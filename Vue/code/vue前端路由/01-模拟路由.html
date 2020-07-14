@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>模拟路由</title>
+		<script src="../js/vue.js"></script>
+	</head>
+	<body>
+		<div id="app">
+			<a href="#/zhuye">主页</a>
+			<a href="#/keji">科技</a>
+			<a href="#/caijing">财经</a>
+			<a href="#/yule">娱乐</a>
+			
+			<!-- 根据:is属性指定的组件名称，把对应的组件渲染到component 标签所在位置 -->
+			<component :is="comName"></component>
+		</div>
+		<script>
+			//定义需要被切换的四个组件
+			//主页组件
+			const zhuye = {
+				template:'<h1>主页信息</h1>'
+			}
+		
+			//科技组件
+			const keji = {
+				template:'<h1>科技信息</h1>'
+			}
+			
+			//财经组件
+			const caijing = {
+				template: '<h1>财经信息</h1>'
+			}
+			
+			//娱乐组件
+			const yule = {
+				template: '<h1>娱乐信息</h1>'
+			}
+			
+			//vue实例对象
+			const vm = new Vue({
+				el: "#app",
+				data: {
+					comName:'zhuye'
+				},
+				//注册私有组件
+				components: {
+					zhuye,
+					keji,
+					caijing,
+					yule
+				}
+			})
+			
+			//监听window 的 onhashchange 事件根据想要的hash值，切换要显示的组件的名称
+			window.onhashchange = function(){
+				//通过location.hash 获取最新的hash值
+				console.log(location.hash)
+				console.log(location.hash.slice(1))
+				switch(location.hash.slice(1)){
+					case '/zhuye':
+					  // this.comName = 'zhuye'  不行，因为在vm实例外要用vm.comName
+					  vm.comName = 'zhuye'
+					break;
+					case '/keji':
+					  vm.comName = 'keji'
+					break
+					case '/caijing':
+					  vm.comName = 'caijing'
+					break
+					case '/yule':
+					  vm.comName = 'yule'
+					break
+					/*
+					在methods对象中去获取data的数据:核心代码：this.text
+					在VUE的声明周期函数里调用data数据: 核心代码：this.text
+					在vue对象实例外获取data数据:核心代码：vm.text
+					*/
+				}
+			}
+		</script>
+	</body>
+</html>

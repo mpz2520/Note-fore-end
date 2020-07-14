@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>vue-router的基本使用</title>
+	<!-- 导入vue文件 -->
+	<script src="../js/vue.js"></script>
+	<script src="../js/vue-router.js"></script>
+</head>
+<body>
+	<!-- 被vue实例所控制的区域 -->
+	<div id="app">
+		<!-- 使用 router-link 组件来导航. -->
+		<!-- <router-link> 默认会被渲染成一个 `<a>` 标签 -->
+		<!-- `to` 属性默认渲染成href -->
+		<router-link to="/user">User</router-link>
+		<router-link to="/register">Register</router-link>
+		<!-- 路由出口 -->
+		<!-- 路由匹配到的组件将渲染在这里 -->
+		<router-view></router-view>
+	</div>
+	<script type="text/javascript">
+		// 1. 定义 (路由) 组件。
+		// 可以从其他文件 import 进来
+		const User = { template: '<h1>User组件</h1>' }
+		const Register = { template: `<div>
+		<h1>Register组件</h1>
+		<hr/>
+		
+		<!-- 子路由链接 -->
+		<router-link to="/register/tab1">tab1</router-link>
+		<router-link to="/register/tab2">tab2</router-link>
+		
+		<!-- 子路占位符 -->
+		<router-view></router-view>
+		</div>`
+		}
+		
+		//定义子组件
+		const Tab1 = { template: '<h1>Tab1子组件</h1>'}
+		const Tab2 = { template: '<h1>Tab2子组件</h1>'}
+		
+		// 2. 定义路由
+		// 每个路由应该映射一个组件。 其中"component" 可以是
+		// 通过 Vue.extend() 创建的组件构造器，
+		// 或者，只是一个组件配置对象。
+		// 我们晚点再讨论嵌套路由。
+		const routes = [
+			//至少包含path component 这两个属性
+		  { path: '/', redirect: '/User'},   //路由重定向演示
+		  { path: '/user', component: User },
+		  { path: '/register', component: Register,
+		   //children 表示子路由规则数组
+		   children: [
+			   { path: '/register/tab1', component: Tab1}, 
+			   { path: '/register/tab2', component: Tab2}
+		   ]
+		   }
+		]
+		
+		// 3. 创建 router 实例，然后传 `routes` 配置
+		// 你还可以传别的配置参数, 不过先这么简单着吧。
+		const router = new VueRouter({
+			//routes 是路由规则数组
+		  routes // (缩写) 相当于 routes: routes
+		})
+		
+		// 4. 创建和挂载根实例。
+		// 记得要通过 router 配置参数注入路由，
+		// 从而让整个应用都有路由功能
+		// const app = new Vue({
+		//   router
+		// }).$mount('#app')
+		//上面的其实是vue实例的另一个写法
+		const vm = new Vue({
+			el:'#app',
+			router
+		})
+		
+	</script>
+</body>
+</html>

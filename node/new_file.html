@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <style type="text/css">
+        *{
+            padding: 0;
+            margin: 0;
+        }
+        body{
+            background-color: rgb(0,255,255);
+            font-size: 25px;
+            /* font-family:'楷体'; */
+        }
+        #demo{
+            
+            text-align: center;
+        }
+        #time{
+            position: absolute;
+            top: 0;
+            right: 0;
+            font-size: 30px;
+            color: pink;
+        }
+        a{
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            text-decoration: none;
+            color: green;
+        }
+    </style>
+</head>
+<body>
+    <input type="color" id="color" onchange="fun()">
+    <div class="demo" id="demo">
+        <p id="time"></p>
+        <!-- 重点：自己要播放多个视频资源的时候把下面src中的值换成自己电脑中的第一个视频资源地址，其他视频地址换到下面value中 -->
+        <video id="video" width="880" height="614" autobuffer controls src="E:\video\ES6\黑马-ES6\001 01-JavaScript.flv" type="video/mp4"></video><br>
+        <span>选择播放速率：
+            <select id="selRate">
+                <option value="0.5">0.5</option>
+                <option value="1">1.0</option>
+                <option value="1.25">1.25</option>
+                <option value="1.5">1.5</option>
+                <option value="2">2.0</option>
+                <option value="2.5">2.5</option>
+                <option value="3.0">3.0</option>
+                <option value="3.5" selected>3.5</option>
+                <option value="4.0">4.0</option>
+            </select>
+        </span>
+        <span>选集：
+            <!-- 重点：自己用的时候把下面value中的值换成自己电脑中的视频资源地址即可 -->
+            <select id="selections">
+                <option value="E:\video\ES6\黑马-ES6\001 01-JavaScript.flv">1</option>
+                <option value="D:\javaweb视频\028004002.flv">2</option>
+                <option value="D:\javaweb视频\028004003.flv">3</option>
+                <option value="D:\javaweb视频\028004004.flv">4</option>
+                <option value="D:\javaweb视频\028004005.flv">5</option>
+                <option value="D:\javaweb视频\028004006.flv">6</option>
+                <option value="D:\javaweb视频\028004007.flv">7</option>
+                <option value="D:\javaweb视频\028004008.flv">8</option>
+                <option value="D:\javaweb视频\028004009.flv">9</option>
+                <option value="D:\javaweb视频\028004010.flv">10</option>
+                <option value="D:\javaweb视频\028004011.flv">11</option>
+                <option value="D:\javaweb视频\028004012.flv">12</option>
+                <option value="D:\javaweb视频\028004013.flv">13</option>
+                <option value="D:\javaweb视频\028004014.flv">14</option>
+            </select>
+        </span>
+    </div>
+    <a href="https://blog.csdn.net/zag666">博客地址</a>
+</body>
+
+<script type="text/javascript">
+    //获取页面中的元素
+    var eleSelect = document.getElementById('selRate');
+    var eleButton = document.getElementById('btnPlay');
+    var selections = document.getElementById('selections');
+    var video = document.getElementById('video');
+    var color = document.getElementById('color');
+    // 改变播放速率
+    eleSelect.addEventListener('change', function () {
+        video.playbackRate = this.value;
+    });
+    // 点击视频播放，再次点击暂停
+    video.addEventListener('click', function () {
+         if(video.paused){
+            video.play();
+        }else{
+            video.pause();
+        }
+    });
+    //选集
+    selections.addEventListener('change', function () {
+        video.src = this.value;
+    });
+    //空格控制视频播放暂停
+    document.onkeyup = function (event) {
+        var e = event || window.event || arguments.callee.caller.arguments[0];
+    if (e && e.keyCode === 32) {
+            // 按空格键 判断当前是否暂停
+            video.paused === true ? video.play() : video.pause();
+            return false;
+        }
+    };
+    //设置背景颜色
+    color.addEventListener('change', function () {
+        document.body.style.backgroundColor=color.value;
+    });
+    //设置右上角的北京时间
+    setInterval(function(){
+            clock=new Date();
+            year=clock.getFullYear();
+            month=clock.getMonth()+1;
+            day=clock.getDate();
+            hour=clock.getHours();
+            minute=clock.getMinutes();
+            second=clock.getSeconds();
+            if (hour<10) {
+                hour="0"+hour;
+            }
+            if (minute<10) {
+                minute="0"+minute;
+            }
+            if (second<10) {
+                second="0"+second;
+            }
+            str=year+'-'+month+'-'+day+' '+hour+':'+minute+':'+second;
+            document.getElementById("time").innerHTML=str;
+        },1000);
+</script>
+</html>

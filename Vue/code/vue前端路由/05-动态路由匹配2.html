@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>动态路由匹配2</title>
+	<!-- 导入vue文件 -->
+	<script src="../js/vue.js"></script>
+	<script src="../js/vue-router.js"></script>
+</head>
+<body>
+	<!-- 被vue实例所控制的区域 -->
+	<div id="app">
+		<!-- 使用 router-link 组件来导航. -->
+		<!-- <router-link> 默认会被渲染成一个 `<a>` 标签 -->
+		<!-- `to` 属性默认渲染成href -->
+		<router-link to="/user/a">UserA</router-link>
+		<router-link to="/user/b">UserB</router-link>
+		<router-link to="/user/c">UserC</router-link>
+		<router-link to="/rigister">Rigister</router-link>
+		<!-- 路由出口 -->
+		<!-- 路由匹配到的组件将渲染在这里 -->
+		<router-view></router-view>
+	</div>
+	<script type="text/javascript">
+		// 1. 定义 (路由) 组件。
+		// 可以从其他文件 import 进来
+		const User = { 
+			props: ['userID'],
+			template: '<h1>User组件 --用户ID为:{{$route.params.userID}}--{{userID}}</h1>' }
+		const Rigister = { template: '<h1>Rigister组件</h1>' }
+		
+		// 2. 定义路由
+		const routes = [
+			//至少包含path component 这两个属性
+		  { path: '/', redirect: '/user/a'},   //路由重定向演示
+		  { path: '/user/:userID', component: User, props: true }, //动态路径参数以冒号(:)开头
+		  { path: '/rigister', component: Rigister }
+		]
+		
+		// 3. 创建 router 实例，然后传 `routes` 配置
+		const router = new VueRouter({
+			//routes 是路由规则数组
+		  routes // (缩写) 相当于 routes: routes
+		})
+		
+		// 4. 创建和挂载根实例。
+		const vm = new Vue({
+			el:'#app',
+			router
+		})
+		
+	</script>
+</body>
+</html>

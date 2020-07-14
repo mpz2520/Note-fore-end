@@ -39,7 +39,7 @@ transition 属性是一个简写属性，用于设置四个过渡属性：
 
 **说明**    
 
-![三次贝塞尔曲线](./public/img/cubic-bezier.png)
+![三次贝塞尔曲线](../public/img/cubic-bezier.png)
 
 cubic-bezier称为三次贝塞尔曲线，主要是生成速度曲线的函数，cubic-bezier(n,n,n,n)中的四个参数为(x1,y1,x2,y2)
 

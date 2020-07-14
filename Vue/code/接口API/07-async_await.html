@@ -15,6 +15,14 @@
 			  //  console.log(ret.data);
 		   // })
 		   
+		   
+		   // async function queryData() {
+			  //  var ret = await axios.get('adata');   //await 后面返回Promise实例对象
+			  //  console.log(ret.data);
+		   // }
+		   // queryData();
+		   
+		   
 		   // async function queryData() {
 			  //  var ret = await axios.get('adata');   //await 后面返回Promise实例对象
 			  //  console.log(ret.data);
@@ -37,8 +45,8 @@
 		   async/await处理多个异步请求
 		   */
 		  async function queryData() {
-			   var info = await axios.get('async1');   
-			   var ret = await axios.get('async2?info=' + info.data); 
+			   var info = await axios.get('async1');  //先从async1中拿到info数据 
+			   var ret = await axios.get('async2?info=' + info.data); //?info做为传递参数，参数内容为info.data
 			   return ret.data;
 		  }
 		  queryData().then(data=>{

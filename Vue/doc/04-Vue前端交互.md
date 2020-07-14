@@ -286,7 +286,7 @@ axios.get('url').then(ret=>{
 ### 4.4 axios参数传递
 1. GET参数传递
    * 通过URL传递参数
-   * 通过params传递参数
+   * 通过params属性传递参数，注：params属性名称是axios专门提供的
 
 传统URL传参
 ```
@@ -429,8 +429,8 @@ axios.get('http://localhost:3000/axios-json').then(ret=>{
  * await关键字用于saync函数中(await可以得到异步的结果,await后面可以跟Promise实例对象)
  ```
  async function queryData(id){
-	 const ret = await axios.get('/data')
-	 return ret;
+	 const ret = await axios.get('/data')   
+	 return ret;     //返回Promise对象，
  }
  queryData.then(ret=>{
 	 console.log(ret)
@@ -450,6 +450,4 @@ queryData().then(data=>{
   });
 ```
 
-
- 
 ## 6，基于接口的案例
