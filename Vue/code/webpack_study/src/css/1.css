@@ -1,0 +1,20 @@
+li{
+	list-style-type: none;
+}
+::placeholder {
+	color: red;
+}
+
+/* 添加IE浏览器前缀 */
+/* 方法2: 配置 postCSS 自动添加 css 的兼容前缀 */
+/* :-ms-input-placeholder{
+	color: blue;
+} */
+
+.box {
+	width: 580px;
+	height: 340px;
+	background-color: pink;
+	background: url('../images/1.jpg');   
+	/* background-image: url(../images/1.jpg); */
+}

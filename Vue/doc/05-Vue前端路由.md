@@ -182,7 +182,8 @@ const router = new VueRouter({
 **router.push()方法参数规则**
 ```
 // 字符串(路径)
-router.push('home')
+router.push('home')  
+router.push('/userinfo/' + id)   //字符串传递参数
 
 // 对象
 router.push({ path: 'home' })
